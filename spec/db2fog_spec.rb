@@ -30,7 +30,7 @@ describe DB2Fog do
       load_schema
       Person.create!(:name => "Baxter")
 
-      Timecop.travel(Time.local(2011, 7, 23, 14, 10, 0)) do
+      Timecop.travel(Time.utc(2011, 7, 23, 4, 10, 0)) do
         db2fog.backup
       end
 
@@ -42,11 +42,11 @@ describe DB2Fog do
       load_schema
       Person.create!(:name => "Baxter")
 
-      Timecop.travel(Time.local(2011, 7, 23, 14, 10, 0)) do
+      Timecop.travel(Time.utc(2011, 7, 23, 4, 10, 0)) do
         db2fog.backup
       end
 
-      Timecop.travel(Time.local(2011, 7, 24, 14, 10, 0)) do
+      Timecop.travel(Time.utc(2011, 7, 24, 4, 10, 0)) do
         db2fog.backup
       end
 
@@ -58,8 +58,8 @@ describe DB2Fog do
       load_schema
       Person.create!(:name => "Baxter")
 
-      Timecop.travel(Time.local(2011, 7, 23, 12, 10, 0)) { db2fog.backup }
-      Timecop.travel(Time.local(2011, 7, 23, 14, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 7, 23, 12, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 7, 23, 4, 10, 0)) { db2fog.backup }
 
       latest = File.join(storage_dir, "most-recent-dump-db2s3_unittest.txt")
       File.read(latest).should == "dump-db2s3_unittest-201107230410.sql.gz"
@@ -85,26 +85,26 @@ describe DB2Fog do
       Person.create!(:name => "Baxter")
 
       # keep 1 backup per week
-      Timecop.travel(Time.local(2011, 6, 23, 14, 10, 0)) { db2fog.backup }
-      Timecop.travel(Time.local(2011, 6, 24, 14, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 6, 23, 4, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 6, 24, 4, 10, 0)) { db2fog.backup }
 
       # keep 1 backup per day
-      Timecop.travel(Time.local(2011, 7, 20, 14, 10, 0)) { db2fog.backup }
-      Timecop.travel(Time.local(2011, 7, 20, 18, 10, 0)) { db2fog.backup }
-      Timecop.travel(Time.local(2011, 7, 20, 23, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 7, 20, 4, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 7, 20, 18, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 7, 20, 23, 10, 0)) { db2fog.backup }
 
       # keep all backups from past 24 hours
-      Timecop.travel(Time.local(2011, 7, 23, 12, 10, 0)) { db2fog.backup }
-      Timecop.travel(Time.local(2011, 7, 23, 14, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 7, 23, 4, 10, 0)) { db2fog.backup }
+      Timecop.travel(Time.utc(2011, 7, 23, 12, 10, 0)) { db2fog.backup }
 
       # clean up
-      Timecop.travel(Time.local(2011, 7, 23, 14, 10, 0)) { db2fog.clean }
+      Timecop.travel(Time.utc(2011, 7, 23, 4, 10, 0)) { db2fog.clean }
 
       backup_files.should == [
         "dump-db2s3_unittest-201106230410.sql.gz",
         "dump-db2s3_unittest-201107200410.sql.gz",
-        "dump-db2s3_unittest-201107230210.sql.gz",
         "dump-db2s3_unittest-201107230410.sql.gz",
+        "dump-db2s3_unittest-201107231210.sql.gz",
         "most-recent-dump-db2s3_unittest.txt"
       ]
     end
@@ -116,7 +116,7 @@ describe DB2Fog do
       Person.create!(:name => "Baxter")
 
       # clean up
-      Timecop.travel(Time.local(2011, 7, 23, 14, 10, 0)) { db2fog.clean }
+      Timecop.travel(Time.utc(2011, 7, 23, 4, 10, 0)) { db2fog.clean }
 
       backup_files.should == [ "foo.txt" ]
     end

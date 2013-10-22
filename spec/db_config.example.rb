@@ -1,5 +1,5 @@
 DBConfig = {
-  :adapter  => "mysql2",
+  :adapter  => "mysql",
   :encoding => "utf8",
   :database => 'db2s3_unittest',
   :user     => "username",
